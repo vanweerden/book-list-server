@@ -1,27 +1,17 @@
-// Create, Update, and Delete routes
-
+// Other routes
 'use strict'
 const connection = require('../app.js');
 
+// POST route: Create new book entry
 module.exports = {
-  // Create new book entry
   createEntry: (req, res) => {
-    const newBook = {
-      title: req.title,
-      authorFirstName: req.authorFirstName,
-      authorLastName: req.authorLastName,
-      finished: req.finished,
-      language: req.language,
-      type: req.type,
-      blurb: req.blurb
-    };
+    const newBook = req.body;
 
-    connection.query({
-      sql: 'INSERT INTO `books` VALUES (?)',
-      values: Object.keys(newBook)
-    } function (err, res, fields)
-  );
-
-
+    connection.query('INSERT INTO books SET ?', newBook,
+      (err, res) => {
+        if (err) throw err;
+        console.log('Last insert ID: ', res.insertId);
+      }
+    )
   }
-};
+}
