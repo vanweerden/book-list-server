@@ -6,6 +6,7 @@ const connection = require('../app.js');
 // GET: curl http://localhost:5000/
 // POST: curl --data "&title=This%20is%20a%20Title&authorFirstName=Andrew&authorLastName=van%20Weerden&finished=2020-02-02&language=english&type=fiction&blurb=testing%20testing" http://localhost:5000/
 // UPDATE: curl -X PUT -d 'id=7&title=Updated!' http://localhost:5000
+// DELETE: curl -X DELETE -d 'id=7' http://localhost:5000
 
 module.exports = {
   // CREATE new book entry
@@ -29,9 +30,18 @@ module.exports = {
         console.log('Rows affected: ', res.affectedRows);
       }
     );
-  }
-
+  },
 
   // DELETE a book (given book id)
+  deleteEntry: (req, res) => {
+    const deleteId = req.body.id;
 
+    connection.query('DELETE FROM books WHERE id = ?', [deleteId],
+      (err, res) => {
+        if (err) throw err;
+
+        console.log(`Deleted ${res.affectedRows} row(s)`);
+      }
+    );
+  }
 }

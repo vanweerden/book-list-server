@@ -33,11 +33,13 @@ module.exports = connection;
 const { getBooks } = require('./routes/index');
 const { createEntry } = require('./routes/routes');
 const { updateEntry } = require('./routes/routes');
+const { deleteEntry } = require('./routes/routes');
 
 // Route handlers
 app.get('/', getBooks);
 app.post('/', createEntry);
 app.put('/', updateEntry);
+app.delete('/', deleteEntry);
 
 app.listen(port, () => {
   console.log(`Server running on port: ${port}`);
