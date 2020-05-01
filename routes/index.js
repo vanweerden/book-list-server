@@ -1,4 +1,4 @@
-// Initial get request: lists books
+// READ route: lists books
 'use strict'
 const connection = require('../app.js');
 
@@ -12,8 +12,8 @@ module.exports = {
       if(err) throw err;
 
       console.log('Data received from database');
-      results.forEach( (row, i) => {
-        console.log(`${i + 1} ${row.title} by ${row.authorFirstName} ${row.authorLastName}`);
+      results.forEach( (row) => {
+        console.log(`${row.title} by ${row.authorFirstName} ${row.authorLastName}`);
       });
     });
   }

@@ -26,21 +26,18 @@ connection.connect((err) => {
   console.log('Connecting as: ' + connection.threadId);
 });
 
+// Export so route modules can use
 module.exports = connection;
 
 // Import routes
 const { getBooks } = require('./routes/index');
 const { createEntry } = require('./routes/routes');
+const { updateEntry } = require('./routes/routes');
 
-// test POST route
-// curl --data "&title=This%20is%20a%20Title&authorFirstName=Andrew&authorLastName=van%20Weerden&finished=2020-02-02&language=english&type=fiction&blurb=testing%20testing" http://localhost:5000/
-
-
-// Read and list books from database
+// Route handlers
 app.get('/', getBooks);
 app.post('/', createEntry);
-// TEST
-// curl --data "title=New%20Book&authorFirstName=Someone&authorLastName=New&finished=2020-02-02&type=fiction&blurb=it%20worked" http://locahost:5000/books
+app.put('/', updateEntry);
 
 app.listen(port, () => {
   console.log(`Server running on port: ${port}`);
