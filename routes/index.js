@@ -12,9 +12,11 @@ module.exports = {
       if(err) throw err;
 
       console.log('Data received from database');
-      results.forEach( (row) => {
-        console.log(`${row.title} by ${row.authorFirstName} ${row.authorLastName}`);
-      });
+      res.send(JSON.STRINGIFY(results));
+      // results.forEach( (row) => {
+      //   console.log(row);
+      //   // console.log(`${row.title} by ${row.authorFirstName} ${row.authorLastName}`);
+      // });
     });
   }
 };
