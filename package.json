@@ -1,14 +1,14 @@
 {
-  "name": "mysql-test",
+  "name": "book-list-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A poor man's GoodReads",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "app.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["Express", "RestAPI", "MySQL", "Books"],
+  "author": "Andrew Vanweerden",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",

@@ -1,10 +1,14 @@
 'use strict'
 const express = require('express');
+const bodyParser = require('body-parser');
+
 const app = express();
 
-// Will help with POST parsing
-const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended: false}));
+// Parse requests of content-type application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({extended: true}));
+
+// Parse requests of content-type - application/json
+app.use(bodyParser.json());
 
 // PORT ENVIRONMENT VARIABLE
 const port = 5000;
@@ -29,17 +33,13 @@ connection.connect((err) => {
 // Export so route modules can use
 module.exports = connection;
 
-// Import routes
-const { getBooks } = require('./routes/index');
-const { createEntry } = require('./routes/routes');
-const { updateEntry } = require('./routes/routes');
-const { deleteEntry } = require('./routes/routes');
+// Initial GET request
+app.get('/', (req, res) => {
+  res.json({"message": "Welome to Book List!"});
+});
 
-// Route handlers
-app.get('/', getBooks);
-app.post('/', createEntry);
-app.put('/', updateEntry);
-app.delete('/', deleteEntry);
+// Import Books routes
+require('./app/routes/book.routes.js')(app);
 
 app.listen(port, () => {
   console.log(`Server running on port: ${port}`);
