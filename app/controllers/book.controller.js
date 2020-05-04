@@ -4,18 +4,13 @@ const connection = require('../../server.js');
 
 // Create new book entry in databas
 exports.create = (req, res) => {
-  // Validate request
-  if(!req.body.content) {
-    return res.status(400).send({
-      message: "Not content cannot be empty"
-    });
-  }
-
   // Create new note from encoded URL
   const newBook = req.body;
+  console.log(newBook);
 
-  // MySQL query
-  connection.query('INSERT INTO books SET ?', newBook,
+  // Make MySQL query to insert new book into table
+  let query = 'INSERT INTO books SET ?';
+  connection.query(query, newBook,
     (err, res) => {
       if (err) throw err;
       console.log('Last insert ID: ', res.insertId);
@@ -32,17 +27,29 @@ exports.getAll = (req, res) => {
     if(err) throw err;
 
     console.log('Data received from database');
-    res.send(JSON.STRINGIFY(results));
-    // results.forEach( (row) => {
-    //   console.log(row);
-    //   // console.log(`${row.title} by ${row.authorFirstName} ${row.authorLastName}`);
-    // });
+    res.send(JSON.stringify(results));
+    results.forEach( (row) => {
+      console.log(`${row.title} by ${row.authorFirstName} ${row.authorLastName}`);
+    });
   });
 }
 
 // Retrieve ONE book given id
 exports.getOne = (req, res) => {
+  let query = `SELECT * FROM books WHERE id = ?`;
+  let id = req.params.id;
+  console.log(`Fetching data for book id ${id}`);
 
+  // Execute query
+  connection.query(query, id, (err, result) => {
+    if(err) throw err;
+
+    console.log(`Received data for book id ${id}: `);
+    let json = JSON.stringify(result);
+    res.send(json);
+    
+    console.log(JSON.parse(json));
+  });
 }
 
 // UPDATE a book identified by id
@@ -72,6 +79,6 @@ exports.delete = (req, res) => {
 
 // TESTS
 // GET: curl http://localhost:5000/
-// POST: curl --data "&title=This%20is%20a%20Title&authorFirstName=Andrew&authorLastName=van%20Weerden&finished=2020-02-02&language=english&type=fiction&blurb=testing%20testing" http://localhost:5000/
+  // POST: curl --data "&title=This%20is%20a%20Title&authorFirstName=Andrew&authorLastName=van%20Weerden&finished=2020-02-02&language=english&type=fiction&blurb=testing%20testing" http://localhost:5000/books/
 // UPDATE: curl -X PUT -d 'id=7&title=Updated!' http://localhost:5000
 // DELETE: curl -X DELETE -d 'id=7' http://localhost:5000

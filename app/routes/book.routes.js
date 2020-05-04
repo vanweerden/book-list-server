@@ -9,11 +9,11 @@ module.exports = (app) => {
   app.get('/books', books.getAll);
 
   // Retrieve single note with id
-  app.get('/books:id', books.getOne)
+  app.get('/books/:id', books.getOne)
 
   // Update book with id
   app.put('/books/:id', books.update);
 
   // Delete book with id
-  app.delete('/books:id', books.delete);
+  app.delete('/books/:id', books.delete);
 }
