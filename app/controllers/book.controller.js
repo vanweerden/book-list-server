@@ -41,21 +41,22 @@ exports.getOne = (req, res) => {
   console.log(`Fetching data for book id ${id}`);
 
   // Execute query
-  connection.query(query, id, (err, result) => {
+  connection.query(query, [id], (err, result) => {
     if(err) throw err;
 
     console.log(`Received data for book id ${id}: `);
     let json = JSON.stringify(result);
     res.send(json);
-    
+
     console.log(JSON.parse(json));
   });
 }
 
-// UPDATE a book identified by id
+// UPDATE a book identified by id in request
 exports.update = (req, res) => {
   const update = req.body;
 
+  // Execute query to db
   connection.query(`UPDATE books SET ? WHERE id= ?`, [update, update.id],
     (err, res) => {
       if (err) throw err;
@@ -66,9 +67,10 @@ exports.update = (req, res) => {
 
 // DELETE a book (given book id)
 exports.delete = (req, res) => {
-  const deleteId = req.body.id;
+  let query = `DELETE FROM books WHERE id = ?`;
+  let id = req.params.id;
 
-  connection.query('DELETE FROM books WHERE id = ?', [deleteId],
+  connection.query(query, [id],
     (err, res) => {
       if (err) throw err;
 
@@ -78,7 +80,8 @@ exports.delete = (req, res) => {
 }
 
 // TESTS
-// GET: curl http://localhost:5000/
-  // POST: curl --data "&title=This%20is%20a%20Title&authorFirstName=Andrew&authorLastName=van%20Weerden&finished=2020-02-02&language=english&type=fiction&blurb=testing%20testing" http://localhost:5000/books/
-// UPDATE: curl -X PUT -d 'id=7&title=Updated!' http://localhost:5000
-// DELETE: curl -X DELETE -d 'id=7' http://localhost:5000
+// GET (all): curl http://localhost:5000/books
+// GET (one): curl http://localhost:5000/books/3
+// POST: curl -d "&title=This%20is%20a%20Title&authorFirstName=Andrew&authorLastName=van%20Weerden&finished=2020-02-02&language=english&type=fiction&blurb=testing%20testing" http://localhost:5000/books/
+// UPDATE: curl -X PUT -d 'id=7&title=Updated!' http://localhost:5000/books/7
+// DELETE: curl -X DELETE -d http://localhost:5000/books/7
