@@ -5,13 +5,23 @@ const connection = require('../../server.js');
 // Create new book entry in databas
 exports.create = (req, res) => {
   const newBook = req.body;
+  if (Object.keys(newBook).length == 0) {
+    res.status(400).send({
+      message: "Book information cannot be empty"
+    })
+    return;
+  }
 
   // Make query to insert new book into table
   // newBook data is escaped to prevent SQL injection attack
   let query = 'INSERT INTO books SET ?';
   connection.query(query, [newBook],
     (err, res) => {
-      if (err) throw err;
+      if (err) {
+        res.status(500).send({
+          message: err.message || "Some error occurred while creating the book entry."
+        });
+      };
       console.log('Last insert ID: ', res.insertId);
     }
   );
