@@ -2,7 +2,7 @@
 'use strict'
 const connection = require('../../server.js');
 
-// Create new book entry in databas
+// POST new book entry in databas
 exports.create = (req, res) => {
   const newBook = req.body;
   if (Object.keys(newBook).length == 0) {
@@ -69,9 +69,15 @@ exports.getOne = (req, res) => {
 
 // UPDATE a book identified by id in request
 exports.update = (req, res) => {
-  const update = req.body;
+  const newInfo = req.body;
+  if (Object.keys(newInfo).length == 0) {
+    res.status(400).send({
+      message: "Book information cannot be empty"
+    })
+    return;
+  }
 
-  connection.query(`UPDATE books SET ? WHERE id = ?`, [update, update.id],
+  connection.query(`UPDATE books SET ? WHERE id = ?`, [newInfo, newInfo.id],
     (err, res) => {
       if (err) throw err;
       console.log('Rows affected: ', res.affectedRows);
