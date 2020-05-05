@@ -1,5 +1,6 @@
 'use strict'
 module.exports = (app) => {
+  // Import route controller functions
   const books = require('../controllers/book.controller.js');
 
   // Create new book

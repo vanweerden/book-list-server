@@ -4,13 +4,12 @@ const connection = require('../../server.js');
 
 // Create new book entry in databas
 exports.create = (req, res) => {
-  // Create new note from encoded URL
   const newBook = req.body;
-  console.log(newBook);
 
-  // Make MySQL query to insert new book into table
+  // Make query to insert new book into table
+  // newBook data is escaped to prevent SQL injection attack
   let query = 'INSERT INTO books SET ?';
-  connection.query(query, newBook,
+  connection.query(query, [newBook],
     (err, res) => {
       if (err) throw err;
       console.log('Last insert ID: ', res.insertId);
@@ -18,11 +17,10 @@ exports.create = (req, res) => {
   );
 }
 
-// Retrieve and return all books from the database
+// GET all books: sent as array of JSON objects
 exports.getAll = (req, res) => {
   let query = 'SELECT * FROM `books` ORDER BY `finished` DESC';
 
-  // Execute query
   connection.query(query, (err, results) => {
     if(err) throw err;
 
@@ -34,21 +32,24 @@ exports.getAll = (req, res) => {
   });
 }
 
-// Retrieve ONE book given id
+// GET one book given id
 exports.getOne = (req, res) => {
   let query = `SELECT * FROM books WHERE id = ?`;
   let id = req.params.id;
-  console.log(`Fetching data for book id ${id}`);
+  console.log(`Fetching data for book id ${id}...`);
 
-  // Execute query
   connection.query(query, [id], (err, result) => {
-    if(err) throw err;
+    if (err) throw err;
 
-    console.log(`Received data for book id ${id}: `);
-    let json = JSON.stringify(result);
-    res.send(json);
-
-    console.log(JSON.parse(json));
+    if (result.length == 0) {
+      res.status(404).send({
+        message: "Book not found with id ", id
+      });
+    } else {
+      console.log(`Data received`);
+      let json = JSON.stringify(result);
+      res.status(200).send(json);
+    }
   });
 }
 
@@ -56,8 +57,7 @@ exports.getOne = (req, res) => {
 exports.update = (req, res) => {
   const update = req.body;
 
-  // Execute query to db
-  connection.query(`UPDATE books SET ? WHERE id= ?`, [update, update.id],
+  connection.query(`UPDATE books SET ? WHERE id = ?`, [update, update.id],
     (err, res) => {
       if (err) throw err;
       console.log('Rows affected: ', res.affectedRows);

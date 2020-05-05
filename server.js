@@ -27,7 +27,7 @@ connection.connect((err) => {
     console.log('Error connecting: ' + err.stack);
     return;
   }
-  console.log('Connecting as: ' + connection.threadId);
+  console.log('Connected as: ' + connection.threadId);
 });
 
 // Export so route modules can use
@@ -45,7 +45,6 @@ app.listen(port, () => {
   console.log(`Server running on port: ${port}`);
 });
 
-// TODO: How to use this
 // connection.end((err) => {
 //   if (err) console.throw(error);
 // });
