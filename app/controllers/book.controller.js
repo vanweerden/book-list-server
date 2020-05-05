@@ -22,7 +22,11 @@ exports.getAll = (req, res) => {
   let query = 'SELECT * FROM `books` ORDER BY `finished` DESC';
 
   connection.query(query, (err, results) => {
-    if(err) throw err;
+    if (err) {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving books."
+      });
+    };
 
     console.log('Data received from database');
     res.send(JSON.stringify(results));
