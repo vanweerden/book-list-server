@@ -11,7 +11,6 @@ exports.create = (req, res) => {
     })
   }
 
-  // Make query to insert new book into table
   let query = 'INSERT INTO books SET ?';
   connection.query(query, [newBook],
     (err, res) => {
@@ -36,9 +35,6 @@ exports.getAll = (req, res) => {
 
     console.log('Data received from database');
     res.send(JSON.stringify(results));
-    results.forEach( (row) => {
-      console.log(`${row.title} by ${row.authorFirstName} ${row.authorLastName}`);
-    });
   });
 }
 
@@ -100,6 +96,6 @@ exports.delete = (req, res) => {
 // TESTS
 // GET (all): curl http://localhost:5000/books
 // GET (one): curl http://localhost:5000/books/3
-// POST: curl -d "&title=This%20is%20a%20Title&authorFirstName=Andrew&authorLastName=van%20Weerden&finished=2020-02-02&language=english&type=fiction&blurb=testing%20testing" http://localhost:5000/books/
-// UPDATE: curl -X PUT -d 'id=7&title=Updated!' http://localhost:5000/books/7
-// DELETE: curl -X DELETE -d http://localhost:5000/books/7
+// POST: curl -d "title=test" http://localhost:5000/books/
+// UPDATE: curl -X PUT -d 'id=9&title=Updated!' http://localhost:5000/books/7
+// DELETE: curl -X DELETE http://localhost:5000/books/7
