@@ -6,21 +6,18 @@ const connection = require('../../server.js');
 exports.create = (req, res) => {
   const newBook = req.body;
   if (Object.keys(newBook).length == 0) {
-    res.status(400).send({
+    return res.status(400).send({
       message: "Book information cannot be empty"
     })
-    return;
   }
 
   // Make query to insert new book into table
-  // newBook data is escaped to prevent SQL injection attack
   let query = 'INSERT INTO books SET ?';
   connection.query(query, [newBook],
     (err, res) => {
       if (err) {
-        res.status(500).send({
-          message: err.message || "Some error occurred while creating the book entry."
-        });
+        console.error(err);
+        return;
       };
       console.log('Last insert ID: ', res.insertId);
     }
@@ -33,9 +30,8 @@ exports.getAll = (req, res) => {
 
   connection.query(query, (err, results) => {
     if (err) {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving books."
-      });
+      console.error(err);
+      return;
     };
 
     console.log('Data received from database');
@@ -53,17 +49,14 @@ exports.getOne = (req, res) => {
   console.log(`Fetching data for book id ${id}...`);
 
   connection.query(query, [id], (err, result) => {
-    if (err) throw err;
-
-    if (result.length == 0) {
-      res.status(404).send({
-        message: "Book not found with id ", id
-      });
-    } else {
-      console.log(`Data received`);
-      let json = JSON.stringify(result);
-      res.status(200).send(json);
+    if (err) {
+      console.error(err);
+      return;
     }
+
+    console.log(`Data received`);
+    let json = JSON.stringify(result);
+    res.status(200).send(json);
   });
 }
 
@@ -71,15 +64,17 @@ exports.getOne = (req, res) => {
 exports.update = (req, res) => {
   const newInfo = req.body;
   if (Object.keys(newInfo).length == 0) {
-    res.status(400).send({
+    return res.status(400).send({
       message: "Book information cannot be empty"
-    })
-    return;
+    });
   }
 
   connection.query(`UPDATE books SET ? WHERE id = ?`, [newInfo, newInfo.id],
     (err, res) => {
-      if (err) throw err;
+      if (err) {
+        console.error(err);
+        return;
+      }
       console.log('Rows affected: ', res.affectedRows);
     }
   );
@@ -92,7 +87,10 @@ exports.delete = (req, res) => {
 
   connection.query(query, [id],
     (err, res) => {
-      if (err) throw err;
+      if (err) {
+        console.error(err);
+        return;
+      };
 
       console.log(`Deleted ${res.affectedRows} row(s)`);
     }
