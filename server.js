@@ -1,6 +1,7 @@
 'use strict'
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 
@@ -9,6 +10,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // Parse requests of content-type - application/json
 app.use(bodyParser.json());
+
+// Enable all CORS requests
+app.use(cors());
 
 // PORT ENVIRONMENT VARIABLE
 const port = 5000;

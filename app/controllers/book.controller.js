@@ -3,7 +3,7 @@
 const connection = require('../../server.js');
 
 // POST new book entry in databas
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   const newBook = req.body;
   if (Object.keys(newBook).length == 0) {
     return res.status(400).send({
@@ -21,7 +21,7 @@ exports.create = (req, res) => {
 }
 
 // GET all books: sent as array of JSON objects
-exports.getAll = (req, res) => {
+exports.getAll = (req, res, next) => {
   let query = 'SELECT * FROM `books` ORDER BY `finished` DESC';
 
   connection.query(query, (err, results) => {
@@ -33,7 +33,7 @@ exports.getAll = (req, res) => {
 }
 
 // GET one book given id
-exports.getOne = (req, res) => {
+exports.getOne = (req, res, next) => {
   let query = `SELECT * FROM books WHERE id = ?`;
   let id = req.params.id;
   console.log(`Fetching data for book id ${id}...`);
@@ -48,7 +48,7 @@ exports.getOne = (req, res) => {
 }
 
 // UPDATE a book identified by id in request
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
   const newInfo = req.body;
   if (Object.keys(newInfo).length == 0) {
     return res.status(400).send({
@@ -66,7 +66,7 @@ exports.update = (req, res) => {
 }
 
 // DELETE a book (given book id)
-exports.delete = (req, res) => {
+exports.delete = (req, res, next) => {
   let query = `DELETE FROM books WHERE id = ?`;
   let id = req.params.id;
 

@@ -7,11 +7,17 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "app.js"
   },
-  "keywords": ["Express", "RestAPI", "MySQL", "Books"],
+  "keywords": [
+    "Express",
+    "RestAPI",
+    "MySQL",
+    "Books"
+  ],
   "author": "Andrew Vanweerden",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "mysql": "^2.18.1"
   },
