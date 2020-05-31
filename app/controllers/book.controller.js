@@ -17,7 +17,7 @@ exports.create = (req, res, next) => {
       if (err) throw error;
       console.log('Last insert ID: ', res.insertId);
   });
-  res.status(200).end();
+  res.status(200).send(newBook);
 }
 
 // GET all books: sent as array of JSON objects
