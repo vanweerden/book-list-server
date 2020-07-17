@@ -58,7 +58,7 @@ exports.update = (req, res, next) => {
 
   connection.query(`UPDATE books SET ? WHERE id = ?`, [newInfo, newInfo.id],
     (err, res) => {
-      if (err) throw error;
+      if (err) throw err;
       console.log('Rows affected: ', res.affectedRows);
     }
   );
