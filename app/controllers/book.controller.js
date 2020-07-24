@@ -62,7 +62,7 @@ exports.update = (req, res, next) => {
       console.log('Rows affected: ', res.affectedRows);
     }
   );
-  res.status(200).end();
+  res.status(200).send(newInfo);
 }
 
 // DELETE a book (given book id)
