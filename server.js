@@ -23,7 +23,7 @@ const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'subAiku2.',
-  database: 'sitepoint'
+  database: 'book-list'
 });
 
 connection.connect((err) => {
