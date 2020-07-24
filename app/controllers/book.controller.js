@@ -2,6 +2,33 @@
 'use strict'
 const connection = require('../../server.js');
 
+// GET all books: sent as array of JSON objects
+exports.getAll = (req, res, next) => {
+  let sql = 'SELECT * FROM andrew_books ORDER BY `finished` DESC';
+
+  connection.query(sql, (err, results) => {
+    if (err) throw err;
+
+    console.log('Data received from database');
+    res.send(JSON.stringify(results));
+  });
+}
+
+// GET one book given id
+exports.getOne = (req, res, next) => {
+  let sql = `SELECT * FROM andrew_books WHERE id = ?`;
+  let id = req.params.id;
+  console.log(`Fetching data for book id ${id}...`);
+
+  connection.query(sql, [id], (err, result) => {
+    if (err) throw err;
+
+    console.log(`Data received`);
+    let json = JSON.stringify(result);
+    res.status(200).send(json);
+  });
+}
+
 // POST new book entry in databas
 exports.create = (req, res, next) => {
   const newBook = req.body;
@@ -11,40 +38,13 @@ exports.create = (req, res, next) => {
     });
   }
 
-  let query = 'INSERT INTO books SET ?';
-  connection.query(query, [newBook],
+  let sql = 'INSERT INTO andrew_books SET ?';
+  connection.query(sql, [newBook],
     (err, res) => {
-      if (err) throw error;
+      if (err) throw err;
       console.log('Last insert ID: ', res.insertId);
   });
   res.status(200).send(newBook);
-}
-
-// GET all books: sent as array of JSON objects
-exports.getAll = (req, res, next) => {
-  let query = 'SELECT * FROM `books` ORDER BY `finished` DESC';
-
-  connection.query(query, (err, results) => {
-    if (err) throw error;
-
-    console.log('Data received from database');
-    res.send(JSON.stringify(results));
-  });
-}
-
-// GET one book given id
-exports.getOne = (req, res, next) => {
-  let query = `SELECT * FROM books WHERE id = ?`;
-  let id = req.params.id;
-  console.log(`Fetching data for book id ${id}...`);
-
-  connection.query(query, [id], (err, result) => {
-    if (err) throw error;
-
-    console.log(`Data received`);
-    let json = JSON.stringify(result);
-    res.status(200).send(json);
-  });
 }
 
 // UPDATE a book identified by id in request
@@ -56,7 +56,7 @@ exports.update = (req, res, next) => {
     });
   }
 
-  connection.query(`UPDATE books SET ? WHERE id = ?`, [newInfo, newInfo.id],
+  connection.query(`UPDATE andrew_books SET ? WHERE id = ?`, [newInfo, newInfo.id],
     (err, res) => {
       if (err) throw err;
       console.log('Rows affected: ', res.affectedRows);
@@ -67,10 +67,10 @@ exports.update = (req, res, next) => {
 
 // DELETE a book (given book id)
 exports.delete = (req, res, next) => {
-  let query = `DELETE FROM books WHERE id = ?`;
+  let sql = `DELETE FROM andrew_books WHERE id = ?`;
   let id = req.params.id;
 
-  connection.query(query, [id],
+  connection.query(sql, [id],
     (err, res) => {
       if (err) throw error;
 
