@@ -15,8 +15,9 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // PORT ENVIRONMENT VARIABLE
-const port = 5000;
+const process.env.PORT || port = 5000;
 
+// TODO: hide this info before deployment
 // Connect to database
 const mysql = require('mysql');
 const connection = mysql.createConnection({
