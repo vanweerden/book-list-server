@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const sqlite = require('sqlite3').verbose;
+require('dotenv').config();
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // PORT ENVIRONMENT VARIABLE
-const process.env.PORT || port = 5000;
+const port = process.env.PORT || 5000;
 
 // TODO: hide this info before deployment
 // Connect to database
