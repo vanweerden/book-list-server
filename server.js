@@ -1,8 +1,8 @@
 'use strict'
 const express = require('express');
+const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const sqlite = require('sqlite3').verbose;
 require('dotenv').config();
 
 const app = express();
@@ -16,12 +16,9 @@ app.use(bodyParser.json());
 // Enable all CORS requests
 app.use(cors());
 
-// PORT ENVIRONMENT VARIABLE
 const port = process.env.PORT || 5000;
 
 // TODO: hide this info before deployment
-// Connect to database
-const mysql = require('mysql');
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -37,10 +34,9 @@ connection.connect((err) => {
   console.log('Connected as: ' + connection.threadId);
 });
 
-// Export so route modules can use
+// Export so controller modules can use
 module.exports = connection;
 
-// Initial GET request
 app.get('/', (req, res) => {
   res.json({"message": "Welome to Book List!"});
 });
@@ -52,6 +48,7 @@ app.listen(port, () => {
   console.log(`Server running on port: ${port}`);
 });
 
-// connection.end((err) => {
-//   if (err) console.throw(error);
-// });
+process.on('SIGINT', function() {
+  console.log("\nGracefully shutting down from SIGINT (CTRL-C)");
+  process.exit();
+})
