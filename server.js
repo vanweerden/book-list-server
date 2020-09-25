@@ -3,6 +3,7 @@ const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const config = require('./config');
 require('dotenv').config();
 
 const app = express();
@@ -16,15 +17,10 @@ app.use(bodyParser.json());
 // Enable all CORS requests
 app.use(cors());
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || config.app.port;
 
 // TODO: hide this info before deployment
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'subAiku2.',
-  database: 'book-list'
-});
+const connection = mysql.createConnection(config.db);
 
 connection.connect((err) => {
   if (err) {
