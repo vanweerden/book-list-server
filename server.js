@@ -17,9 +17,7 @@ app.use(bodyParser.json());
 // Enable all CORS requests
 app.use(cors());
 
-const port = process.env.PORT || config.app.port;
-
-// TODO: hide this info before deployment
+const port = config.app.port;
 const connection = mysql.createConnection(config.db);
 
 connection.connect((err) => {
@@ -30,7 +28,16 @@ connection.connect((err) => {
   console.log('Connected as: ' + connection.threadId);
 });
 
-// Export so controller modules can use
+// Keep connection open to avoid ECONNRESET
+const maintainConnection = () => {
+  connection.query('SELECT 1', (err, res) => {
+  if (err) {
+    throw err;
+  }
+});
+}
+const intervalID = setInterval(maintainConnection, 6000);
+
 module.exports = connection;
 
 app.get('/', (req, res) => {
@@ -46,5 +53,6 @@ app.listen(port, () => {
 
 process.on('SIGINT', function() {
   console.log("\nGracefully shutting down from SIGINT (CTRL-C)");
+  clearInterval(intervalID);
   process.exit();
 })

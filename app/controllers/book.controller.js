@@ -48,7 +48,7 @@ exports.create = (req, res, next) => {
 
 exports.update = (req, res, next) => {
   const newInfo = req.body;
-  if (Object.keys(newInfo).err.length == 0) {
+  if (Object.keys(newInfo).length == 0) {
     return res.status(400).send({
       message: "Book information cannot be empty"
     });
